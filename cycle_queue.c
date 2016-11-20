@@ -28,12 +28,23 @@ static int is_empty(Queue* queue){
 	if(queue->head == queue->tail){
 		return 0;	
 	}
+	/*if(queue->count == 0)*/
+		/*return 0;*/
 	return 1;
 }
+//判断队列满时可能存在矛盾
+//解决办法：1.记录queue个数 2.que->arr[ARR_LEN-1]这个空间不使用
 static int is_full(Queue* queue){
+	//ignore the last place
 	if(queue->head == (queue->tail + 1) % ARR_LEN){
 		return 0;	
 	}
+
+	//count the num of arr
+	/*if(queue->count == ARR_LEN)*/
+	/*{*/
+		/*return 0;	*/
+	/*}*/
 	return 1;
 	
 }
@@ -44,11 +55,7 @@ int enqueue(Queue* queue, int value){
 		return -1;	
 	}
 	queue->arr[queue->tail] = value;
-	if(queue->tail == ARR_LEN - 1){
-		queue->tail = 0;	
-	}else{
-		queue->tail++;	
-	}
+	queue->tail = (queue->tail + 1)%ARR_LEN;
 	queue->count++;
 	return 0;
 }
@@ -58,11 +65,7 @@ int dequeue(Queue* queue){
 	if(0 == is_empty(queue))
 		return -1;
 	int i = queue->arr[queue->head];
-	if(queue->head == ARR_LEN -1){
-		queue->head = 0;	
-	}else{
-		queue->head++;	
-	}
+	queue->head = (queue->head + 1)%ARR_LEN;
 	queue->count--;
 	return i;
 }
