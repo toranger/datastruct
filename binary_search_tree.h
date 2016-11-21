@@ -13,23 +13,33 @@ typedef struct node{
 	int key;
 	struct node* left;
 	struct node* right;
+	struct node* pre;
 }Node;
 typedef struct tree{
 	struct node* root;
 	int count;
 }Tree;
+//init node
+Node* bin_tree_node(int key);
 //init tree
 int bin_tree_init(Tree* tree);
-//traver maxnum minnum successor predecessor
-void bin_tree_inorder(Tree* tree);
-//init node
-int bin_tree_node(int key);
-//递归
-int bin_tree_search(Tree* tree, int key);
-//迭代
-int bin_tree_iter_search(Tree* tree, int key);
 //insert
 int bin_tree_insert(Tree* tree, Node* node);
+//递归
+Node* bin_tree_search(Node* root, int key);
+//迭代
+Node* bin_tree_iter_search(Node* root, int key);
+//traver maxnum minnum successor predecessor
+void bin_tree_inorder(Node* root);
+//maxnum
+Node* maxnum(Node* root);
+//minnum
+Node* minnum(Node* root);
+//successor后继
+Node* successor(Node* aim);
+//predecessor前驱
+Node* predecessor(Node* aim);
+
 //transplant  ps:as the rotart节点的旋转
 int bin_tree_transplant(Tree* tree);
 //delete
