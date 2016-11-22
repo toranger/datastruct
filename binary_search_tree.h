@@ -40,8 +40,10 @@ Node* successor(Node* aim);
 //predecessor前驱
 Node* predece(Node* aim);
 
-//transplant  ps:as the rotart节点的旋转
-int bin_tree_transplant(Tree* tree);
+//transplant  ps:use the aim change node as the son tree root
+//does not care the aim node left and right side
+void bin_tree_transplant(Tree* tree, Node* node, Node* aim);
+
 //delete
 int bin_tree_delete(Tree* tree, Node* node);
 

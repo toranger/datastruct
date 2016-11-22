@@ -124,24 +124,47 @@ Node* predece(Node* aim){
 	return tmp;
 }
 //search min max succ predece  O(h)  h = lgn 树高
-//transplant
-int bin_tree_transplant(Tree* tree){
-
-
+//transplant use aim to change node as the son tree root node
+void bin_tree_transplant(Tree* tree,Node* node,Node* aim){
+	if(node->pre == NULL){//node is root
+		tree->root = aim;
+	}else if(node == node->pre->left){//node in left side
+		node->pre->left = aim;		
+	}else{
+		node->pre->right = aim;//right side	
+	}
+	if(aim != NULL)
+		aim->pre = node->pre;
+	return ;
 }
 //delete
 int bin_tree_delete(Tree* tree, Node* node){
-
+	if(tree == NULL)
+		return -1;
+	if(node->left == NULL){
+		//stright	
+		bin_tree_transplant(tree,node,node->right);
+	}else if(node->right == NULL){
+		bin_tree_transplant(tree,node,node->left);	
+	}else{//the node want to delete have two side 
+		Node* aim = successor(node);//the aim is the minest num in the right side 	
+		if(aim->pre != node){
+			//is not the son of node	
+			//exchange the aim with aim right side
+			//ps: aim does not have left side
+			bin_tree_transplant(tree,aim,aim->right);		
+			aim->right = node->right;
+			aim->right->pre = aim;
+			
+		}	
+		//no matter what it has to change the aim and node
+		bin_tree_transplant(tree,node,aim);
+		aim->left = node->left;
+		aim->left->pre = aim;
+	}
+	return 0;
 }
-
-
-
 //Free(Tree* tree){}
-
-
-
-
-
 
 //test main function
 int main()
