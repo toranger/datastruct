@@ -45,7 +45,7 @@ int bin_tree_insert(Tree* tree,Node* node){
 	}
 	node->pre = pre;
 	//judge node in which side of pre node
-	if(pre){
+	if(pre == NULL){
 		tree->root = node;	
 	}else if(node->key < pre->key){
 		pre->left = node;	
@@ -95,11 +95,48 @@ Node* minnum(Node* root){
 		root = root->left;
 	return root;
 }
+//successor 
+//whether has the right son tree
+//whether is the father's right node
+Node* successor(Node* aim){
+	if(aim->right != NULL){
+		//有右子树则aim的后继是右子树中最小的节点
+		return minnum(aim->right);
+	}	
+	//判断是否是父亲节点的右节点不是则为父节点
+	Node* tmp = aim->pre;
+	while(tmp != NULL && (tmp->right = aim)){
+		aim = tmp;	
+		tmp = tmp->pre;
+	}
+	return tmp;
+}
+//predece
+Node* predece(Node* aim){
+	if(aim->left != NULL){
+		return maxnum(aim->left);	
+	}
+	Node* tmp = aim->pre;
+	while(tmp != NULL && (tmp->left = aim)){
+		aim = tmp;	
+		tmp = tmp->pre;
+	}
+	return tmp;
+}
+//search min max succ predece  O(h)  h = lgn 树高
+//transplant
+int bin_tree_transplant(Tree* tree){
+
+
+}
+//delete
+int bin_tree_delete(Tree* tree, Node* node){
+
+}
 
 
 
-
-
+//Free(Tree* tree){}
 
 
 

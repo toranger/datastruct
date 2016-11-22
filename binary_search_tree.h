@@ -38,7 +38,7 @@ Node* minnum(Node* root);
 //successor后继
 Node* successor(Node* aim);
 //predecessor前驱
-Node* predecessor(Node* aim);
+Node* predece(Node* aim);
 
 //transplant  ps:as the rotart节点的旋转
 int bin_tree_transplant(Tree* tree);
