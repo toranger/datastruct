@@ -22,7 +22,7 @@ typedef struct tree{
 //init node
 Node* bin_tree_node(int key);
 //init tree
-int bin_tree_init(Tree* tree);
+Tree* bin_tree_init();
 //insert
 int bin_tree_insert(Tree* tree, Node* node);
 //递归
@@ -46,15 +46,11 @@ void bin_tree_transplant(Tree* tree, Node* node, Node* aim);
 
 //delete
 int bin_tree_delete(Tree* tree, Node* node);
-
+//show
+void shownode(Node* node);
 
 //free the memery
 //Free(Tree* tree);
-
-
-
-
-
-
+//free_node(Node* node);
 
 #endif //__BIN_TREE_H__

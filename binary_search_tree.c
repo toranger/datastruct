@@ -1,3 +1,11 @@
+/**
+ * @file binary_search_tree.c
+ * @brief       notice when i delete one node i did not 
+ *  free the node memery
+ * @author tmd
+ * @version 1.0
+ * @date 2016-11-24
+ */
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
@@ -141,38 +149,88 @@ void bin_tree_transplant(Tree* tree,Node* node,Node* aim){
 int bin_tree_delete(Tree* tree, Node* node){
 	if(tree == NULL)
 		return -1;
+	Node* aim = NULL;
 	if(node->left == NULL){
 		//stright	
 		bin_tree_transplant(tree,node,node->right);
 	}else if(node->right == NULL){
 		bin_tree_transplant(tree,node,node->left);	
-	}else{//the node want to delete have two side 
-		Node* aim = successor(node);//the aim is the minest num in the right side 	
+	}else{
+		 //the node want to delete have two side 
+		 aim = minnum(node->right);//the aim is the minest num in the right side 	
+	
 		if(aim->pre != node){
-			//is not the son of node	
-			//exchange the aim with aim right side
-			//ps: aim does not have left side
-			bin_tree_transplant(tree,aim,aim->right);		
+		//is not the son of node	
+		//exchange the aim with aim right side
+		//ps: aim does not have left side
+			bin_tree_transplant(tree,aim,aim->right);	
 			aim->right = node->right;
 			aim->right->pre = aim;
-			
 		}	
-		//no matter what it has to change the aim and node
-		bin_tree_transplant(tree,node,aim);
-		aim->left = node->left;
-		aim->left->pre = aim;
+	//no matter what it has to change the aim and node
+	bin_tree_transplant(tree,node,aim);
+	aim->left = node->left;
+	aim->left->pre = aim;
+	//free_node
 	}
+	
 	return 0;
+}
+//show
+void shownode(Node* node){
+    if(node == NULL)
+        return ;
+	printf("----------start------------\n");
+	if(node->pre != NULL)
+		printf("node pre num %d\n",node->pre->key);
+	if(node->left != NULL)
+		printf("node left num %d\n",node->left->key);
+	if(node->right != NULL)
+		printf("node right %d\n",node->right->key);
+	printf("----------end------------\n");
+	return ;
 }
 //Free(Tree* tree){}
 
 //test main function
 int main()
 {
-	
-	
+	int ret ;	
+	int num[9] = {12,5,18,2,9,15,19,13,17};
+	int i;
+	Node* tmp;
+	Tree* tree;
+	tree = bin_tree_init();
+	for(i=0;i<9;i++){
+		tmp = bin_tree_node(num[i]);	
+		ret = bin_tree_insert(tree,tmp);	
+		if(ret == -1)
+			exit(1);
+	}
+	tmp = bin_tree_search(tree->root,15);
+	shownode(tmp);	
+	tmp = bin_tree_iter_search(tree->root,12);	
+	shownode(tmp);
+	bin_tree_inorder(tree->root);	
 
+	tmp = maxnum(tree->root);
+	printf("maxnum is %d\n",tmp->key);
+	tmp = minnum(tree->root);
+	printf("minnum is %d\n",tmp->key);
 
+	tmp = successor(tree->root);
+	printf("%d succ is %d\n",tree->root->key,tmp->key);
+	tmp = predece(tree->root);	
+	printf("%d predece is %d\n",tree->root->key,tmp->key);
+
+	//delete
+	//ret = bin_tree_delete(tree,tree->root->right);
+	//shownode(tree->root->right);
+	ret = bin_tree_delete(tree,tree->root->right->left->left);
+	ret = bin_tree_delete(tree,tree->root);
+	shownode(tree->root);	
+
+	//Free(Tree* tree)
 	return 0;
 }
 
