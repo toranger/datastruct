@@ -2,6 +2,9 @@
  * @file binary_search_tree.c
  * @brief       notice when i delete one node i did not 
  *  free the node memery
+ *  all the function have relate to the tree high O(lgn)
+ *  the speed have connected with the tree high so is not 
+ *	stabilize 
  * @author tmd
  * @version 1.0
  * @date 2016-11-24
