@@ -22,11 +22,15 @@ Node* rb_node_init(int key,int color);
 void left_rotate(Tree* tree, Node* node);
 void right_rotate(Tree* tree, Node* node);
 //insert fixup
-int rb_tree_insert_fixup(Tree* tree, Node* node);
+void rb_tree_insert_fixup(Tree* tree, Node* node);
 //insert
 int rb_tree_insert(Tree* tree, Node* node); 
-
-
-
+//delete transplant ps:change node with aim
+int rb_tree_transplant(Tree* tree,Node* node,Node* aim);
+//delete fixup
+//the node is to rember the last loction of the successer
+int rb_tree_delete_fixup(Tree* tree, Node* node);
+//delete
+int rb_tree_delete(Tree* tree, Node* node);
 
 #endif

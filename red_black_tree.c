@@ -3,6 +3,9 @@
  * @brief bst缺点 insert delete不支持  动态集合的操作，
  *		  随着每次的删除子树中心偏向左侧节点，导致成为线性搜索降低速度.
  *		  而红黑树则保证能o(lgn)去支持这两个操作
+ * nature: 1.每个节点不是黑就是红色 2.根节点是黑色 3.每个叶节点都是黑色NIL 
+ *		   4.如果一个节点是红色则子节点都为黑色 5.对每个节点，从该节点到其所有后代叶节
+ *		   点上都包含相同数目的黑色节点（黑高相同）
  * @author tmd
  * @version 1.0
  * @date 2016-11-24
@@ -82,6 +85,91 @@ void right_rotate(Tree* tree, Node* node){
 	y->right = node;
 	node->pre = y;
 	return ;
+}
+/**
+ * @brief rb_tree_insert_fixup 
+ * 改变分支使整体满足红黑树性质
+ * 有三种情况:1. node的叔节点是红色 2. node的叔节点是黑色且node为于父节点右侧
+ * 3. node的叔节点是黑色且node为于父节点左侧
+ * 情况二将父节点左旋转即可得到情况3
+ * @param tree
+ * @param node the insert node
+ */
+void  rb_tree_insert_fixup(Tree* tree, Node* node){
+	while(node->pre->color == RED){//父节点为红色时需要作调整
+		if(node->pre == node->pre->pre->left){//父节点在哪一测
+			Node* y = node->pre->pre->right;//to rember the uncle node		
+			if(y->color == RED){//case 1
+				//change the father and uncle into BLACK and the grandfather is RED		
+				node->pre->color = BLACK;
+				y->color = BLACK;
+				node->pre->pre->color = RED;
+				node = node->pre->pre;
+			}else{ 
+				if(node == node->pre->right){
+					//node on the right side(case2) can change into
+					//left side(case3)
+					node = node->pre;
+					left_rotate(tree,node);//change into case3
+				}
+				//case3
+				node->pre->color = BLACK;
+				node->pre->pre->color = RED;
+				right_rotate(tree,node->pre->pre);
+			}
+			
+				
+		}else{//父节点在右侧
+		
+		}
+
+	}
+	tree->root->color = BLACK;
+		
+}
+/**
+ * @brief rb_tree_insert 
+ * 按照bst的插入方式将节点插入，并将插入节点置为红色，同时改变分支
+ * 利用fixup函数使其满足红黑树性质
+ * @param tree
+ * @param node
+ * @return 
+ */
+int rb_tree_insert(Tree* tree, Node* node){
+	Node* pre = tree->nil;//rember the insert node father
+	Node* tmp = tree->root;
+	while(tmp != tree->nil){
+		pre = tmp;	
+		if(node->key < tmp->key){
+			tmp = tmp->left;	
+		}else{
+			tmp = tmp->right;	
+		}
+	}
+	node->pre = pre;
+	if(pre == tree->nil){//node is root
+		tree->root = node;	
+	}else if(node->key < pre->key){//node on left
+		pre->left = node;	
+	}else{
+		pre->right = node;	
+	}
+	//init node
+	node->left = tree->nil;
+	node->right = tree->nil;
+	node->color = RED;//don't change the black high in the breach tree
+	//according to the rb tree nature exchange the node loction in breach tree
+	rb_tree_insert_fixup(tree,node);
+	return 0;
+}
+int rb_tree_transplant(Tree* tree, Node* node, Node* aim){
+
+}
+int rb_tree_delete_fixup(Tree* tree, Node* node){
+
+}
+int rb_tree_delete(Tree* tree, Node* node){
+
 }
 
 
