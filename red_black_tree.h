@@ -30,6 +30,8 @@ int rb_tree_transplant(Tree* tree,Node* node,Node* aim);
 //delete fixup
 //the node is to rember the last loction of the successer
 int rb_tree_delete_fixup(Tree* tree, Node* node);
+//minnum
+Node* rb_tree_minnum(Tree* tree, Node* root);
 //delete
 int rb_tree_delete(Tree* tree, Node* node);
 

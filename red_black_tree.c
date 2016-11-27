@@ -92,13 +92,15 @@ void right_rotate(Tree* tree, Node* node){
  * 有三种情况:1. node的叔节点是红色 2. node的叔节点是黑色且node为于父节点右侧
  * 3. node的叔节点是黑色且node为于父节点左侧
  * 情况二将父节点左旋转即可得到情况3
+ * ps:当改变节点颜色时应该考虑红黑树性质保持黑高不变左旋或右旋
  * @param tree
  * @param node the insert node
  */
 void  rb_tree_insert_fixup(Tree* tree, Node* node){
+	Node* y = NULL;//to rember the uncle node
 	while(node->pre->color == RED){//父节点为红色时需要作调整
 		if(node->pre == node->pre->pre->left){//父节点在哪一测
-			Node* y = node->pre->pre->right;//to rember the uncle node		
+			y = node->pre->pre->right;//to rember the uncle node		
 			if(y->color == RED){//case 1
 				//change the father and uncle into BLACK and the grandfather is RED		
 				node->pre->color = BLACK;
@@ -120,12 +122,26 @@ void  rb_tree_insert_fixup(Tree* tree, Node* node){
 			
 				
 		}else{//父节点在右侧
-		
+			y = node->pre->pre->left;	
+			if(y->color == RED){//case1
+				node->pre->pre->color = RED;	
+				node->pre->color = BLACK;
+				y->color = BLACK;	
+				node = node->pre->pre;
+			}else{
+				if(node == node->pre->left){//case2 change into case3
+					node = node->pre;
+					right_rotate(tree, node);
+				}
+				//case3
+				node->pre->color = BLACK;
+				node->pre->pre->color = RED;
+				left_rotate(tree, node->pre->pre);
+			}
 		}
-
 	}
 	tree->root->color = BLACK;
-		
+	return;
 }
 /**
  * @brief rb_tree_insert 
@@ -162,14 +178,115 @@ int rb_tree_insert(Tree* tree, Node* node){
 	rb_tree_insert_fixup(tree,node);
 	return 0;
 }
+/**
+ * @brief rb_tree_transplant 
+ * use aim node to replace the node
+ * same to the BST but the null node point to the nil node
+ * @param tree
+ * @param node
+ * @param aim
+ * @return 
+ */
 int rb_tree_transplant(Tree* tree, Node* node, Node* aim){
-
+	if(node->pre == tree->nil){
+		tree->root = aim;	
+	}else if(node == node->pre->left){//node in left side
+		node->pre->left = aim;	
+	}else{//in right side
+		node->pre->right = aim;	
+	}	
+	//this place dont need to judge node whether have pre
+	aim->pre = node->pre;
+	return 0;
 }
+/**
+ * @brief rb_tree_delete_fixup 
+ *  通过记录需要改变的节点上次出现的位置x，去判断改变后的
+ *  红黑树是否满足性质从而改变删除某节点后的情况
+	case1:x的兄弟节点为红色
+	case2:x的兄弟节点w为黑色，且w左右均为黑
+	case3:x的兄弟节点w为黑色，且左红右黑
+	case4:x的兄弟节点w为黑色，且w右为红
+	case1 into case2 or case3 or case4
+	case3 into case4
+	case2 and case4 can sovle the problem direct
+ * @param tree
+ * @param node :the node which have changed .last location
+ *	 
+ *
+ * @return 
+ */
 int rb_tree_delete_fixup(Tree* tree, Node* node){
-
+	//if color is black if changed must be fixed
+	while(node != tree->root && node->color == BLACK){
+		//case1 can change into case2
+		if(node == node->pre->left){//left side
+		
+		
+		
+		}else{//if(node == node->pre->left) right side
+		
+		
+		}		
+	
+	}
+	node->color = BLACK;
+	return 0;
 }
-int rb_tree_delete(Tree* tree, Node* node){
 
+Node* rb_tree_minnum(Tree* tree, Node* root){
+	while(root->left != tree->nil){
+		root = root->left;	
+	}
+	return root;
+}
+/**
+ * @brief rb_tree_delete same to the BST delete
+ * add two point 1:rember the successer node y color(if is black 
+ * show it have changed the rb tree nature)
+ * 2:rember the successer node y last loction in tree x
+ *
+ * @param tree
+ * @param node
+ *
+ * @return 
+ */
+int rb_tree_delete(Tree* tree, Node* node){
+	//init y
+	Node* y = node;//the node need to change loction
+	Node* x = NULL;//rember the y last loction in tree
+	//rember the color of which node you want change
+	int y_origin_color = y->color;
+	if(node->left == tree->nil){//node have no left
+		x = node->right;
+		rb_tree_transplant(tree, node,node->right);
+	}else if(node->right == tree->nil){//have no right
+		x = node->left;	
+		rb_tree_transplant(tree, node,node->left);
+	}else{//have two side
+		//find successer node y judge y whether is node right side	
+		y = rb_tree_minnum(tree,node->right);
+		y_origin_color = y->color;
+		x = y->right;
+		//judge y pre whether node
+		if(y->pre == node){//is the node right side
+			x->pre = y;	
+		}else{//the y have no left side
+			//transplant y with y right	
+			rb_tree_transplant(tree, y,y->right);
+			y->right = node->right;
+			y->right->pre = y;
+		}
+		//transplant y with node;
+		rb_tree_transplant(tree,node,y);
+		y->left = node->left;
+		y->left->pre = y;
+		y->color = node->color;//became node color keep black tree high
+	}
+	//if change node is red do not change nature
+	if(y_origin_color == BLACK)
+		rb_tree_delete_fixup(tree,x);
+	return 0;
 }
 
 
