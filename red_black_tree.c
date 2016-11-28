@@ -30,7 +30,6 @@ Node* rb_node_init(int key,int color){
 Tree* rb_tree_init(){
 	Tree* tree = (Tree*)malloc(sizeof(Tree));	
 	if(tree != NULL){
-		tree->root = NULL;
 		//nil node
 		Node* node = rb_node_init(0,BLACK);
 		if(node != NULL){
@@ -39,11 +38,12 @@ Tree* rb_tree_init(){
 			node->right = NULL;
 			//when insert node the root node pre is the nil node			
 			tree->nil = node;
+			tree->root = tree->nil;
 		}else{
 			exit(1);	
 		}
 	}
-	exit(1);
+	return tree;
 }
 //left_rotate
 void left_rotate(Tree* tree, Node* node){
@@ -338,12 +338,37 @@ int rb_tree_delete(Tree* tree, Node* node){
 		rb_tree_delete_fixup(tree,x);
 	return 0;
 }
+//show
+void show(Tree* tree, Node* node){
+	if(node != NULL){
+		printf("-----------\n")	;
+		if(node->left != tree->nil)
+			printf("left %d\n",node->left->key);
+		if(node->right != tree->nil)
+			printf("right %d\n",node->right->key);
+		if(node->pre != tree->nil)
+			printf("pre %d\n",node->pre->key);
+		printf("-----------\n")	;
+	}
+	return ;
+}
 
+//Free
+//void Free(Tree* tree){}
 
 //test main funciton
 int main()
 {
-		
+	Tree* tree = rb_tree_init();
+	Node* tmp = rb_node_init(11,RED);		
+	Node* tmp1 = rb_node_init(14,RED);
+	//.....
+	rb_tree_insert(tree, tmp);
+	rb_tree_insert(tree, tmp1);
+	show(tree,tmp1);
+	rb_tree_delete(tree, tmp1);
+	show(tree,tmp);
+	//Free(tree);
 	return 0;
 }
 

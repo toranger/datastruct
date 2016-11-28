@@ -34,5 +34,11 @@ int rb_tree_delete_fixup(Tree* tree, Node* node);
 Node* rb_tree_minnum(Tree* tree, Node* root);
 //delete
 int rb_tree_delete(Tree* tree, Node* node);
+//show
+void show(Tree* tree,Node* node);
+
+
+//Free
+//void Free(Tree* tree);
 
 #endif
