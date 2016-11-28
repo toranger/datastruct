@@ -212,21 +212,71 @@ int rb_tree_transplant(Tree* tree, Node* node, Node* aim){
 	case2 and case4 can sovle the problem direct
  * @param tree
  * @param node :the node which have changed .last location
- *	 
- *
  * @return 
  */
 int rb_tree_delete_fixup(Tree* tree, Node* node){
+	Node* brother = NULL;
 	//if color is black if changed must be fixed
 	while(node != tree->root && node->color == BLACK){
-		//case1 can change into case2
 		if(node == node->pre->left){//left side
-		
-		
-		
+			brother = node->pre->right;
+			//case1 can change into case2 or case3 or case4
+			if(brother->color == RED){//case1
+				brother->color = BLACK;	
+				node->pre->color = RED;
+				left_rotate(tree,node->pre);
+				brother = node->pre->right;
+			}
+			//case2 to sovle the problem
+			if(brother->right->color == BLACK && 
+				brother->left->color == BLACK){
+				brother->color = RED;	
+				node = node->pre;
+			}else{
+				//case3	change into case4
+				if(brother->right->color == BLACK){
+					brother->color = RED;	
+					brother->left->color = BLACK;
+					right_rotate(tree, brother);
+					brother = node->pre->right;
+				}
+				//case4	
+				brother->color = node->pre->color;
+				node->pre->color = BLACK;
+				brother->right->color = BLACK;
+				left_rotate(tree,node->pre);	
+				node = tree->root;//end the while
+			}
 		}else{//if(node == node->pre->left) right side
-		
-		
+			//clause with "right" and "left" exchanged
+			brother = node->pre->left;
+			//case1 can change into case2 or case3 or case4
+			if(brother->color == RED){//case1
+				brother->color = BLACK;	
+				node->pre->color = RED;
+				right_rotate(tree,node->pre);
+				brother = node->pre->left;
+			}
+			//case2 to sovle the problem
+			if(brother->right->color == BLACK && 
+				brother->left->color == BLACK){
+				brother->color = RED;	
+				node = node->pre;
+			}else{
+				//case3	change into case4
+				if(brother->left->color == BLACK){
+					brother->color = RED;	
+					brother->right->color = BLACK;
+					left_rotate(tree, brother);
+					brother = node->pre->left;
+				}
+				//case4	
+				brother->color = node->pre->color;
+				node->pre->color = BLACK;
+				brother->left->color = BLACK;
+				right_rotate(tree,node->pre);	
+				node = tree->root;//end the while
+			}
 		}		
 	
 	}
