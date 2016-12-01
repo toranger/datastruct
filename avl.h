@@ -18,6 +18,8 @@ int get_hight(Node* node);
 int max(int a, int b);
 //get_stat
 int get_stat(Node* node);
+//minnum
+Node* minnum(Node* node);
 //init node
 Node* avl_init_node(int key);
 //init tree
@@ -27,13 +29,13 @@ Node* left_rotate(Tree* tree,Node* node);
 //right_rotate
 Node* right_rotate(Tree* tree,Node* node);
 //balance
-void balance(Tree* tree,Node* node);
+int get_balance(Node* node);
 //search
 Node* avl_search(Tree* tree, int key);
 //insert
-int avl_insert(Tree* tree, Node* node);
+Node* avl_insert(Tree* tree,Node* root, Node* node);
 //delete
-int avl_delete(Tree* tree, Node* node);
+int avl_delete(Tree* tree, Node* root,Node* node);
 
 
 #endif
